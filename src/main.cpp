@@ -1,46 +1,57 @@
 #include <initializer_list>
 #include <iostream>
+#include <vector>
 
-template <typename T, typename = std::enable_if_t<std::is_arithmetic_v<T>>>
 class Tensor {
  private:
-  // 여기에 데이터랑 텐서 모양 정의 관련 자료구조 넣기
+  std::vector<double> buffer;
 
-  struct NestedTensor {
-    NestedTensor(std::initializer_list<NestedTensor> list) {
-      std::cout << "nested tensor's nested tensor called\n";
+  // Helper function to print the tensor
+  void printImpl(const std::vector<double>& vec) const {
+    std::cout << "[ ";
+    for (const auto& val : vec) {
+      std::cout << val << " ";
     }
-
-    NestedTensor(std::initializer_list<T> list) {
-      std::cout << "nested tensor scalar called\n";
-    }
-
-    // 여기에 데이터랑 텐서 모양 정의 관련 자료구조 넣기
-  };
+    std::cout << "]" << std::endl;
+  }
 
  public:
-  // 스칼라
-  Tensor(const int& scalar) {
-    std::cout << "scalar constructor called\n";
-    // data.push_back(static_cast<double>(scalar));
+  // scalar
+  Tensor(const double& scalar) {
+    buffer.push_back(static_cast<double>(scalar));
   }
 
-  // 벡터
-  Tensor(std::initializer_list<T>) {
-    std::cout << "vector constructor called\n";
+  // tensor
+  Tensor(const std::initializer_list<Tensor>& list) {
+    for (const auto& element : list) {
+      buffer.insert(buffer.end(), element.buffer.begin(), element.buffer.end());
+    }
   }
 
-  // n차원
-  Tensor(std::initializer_list<NestedTensor>) {
-    std::cout << "tensor constructor called\n";
-  }
+  // Print the tensor
+  void print() const { printImpl(buffer); }
 };
 
 int main() {
-  Tensor<int> a(5);                 // 스칼라
-  Tensor<int> b({0, 1, 2});         // 벡터
-  Tensor<int> c({{0, 1}, {1, 0}});  // 행렬
-  Tensor<int> d({{{0, 1, 2}, {3, 4, 5}}, {{6, 7, 8}, {9, 10, 11}}});  // 텐서
+  Tensor a(5);  // scalar
+  a.print();
+
+  std::cout << "---------------------\n";
+
+  Tensor b({0, 1, 2});  // vector
+  b.print();
+
+  std::cout << "---------------------\n";
+
+  Tensor c({{0, 1}, {1, 0}});  // matrix
+  c.print();
+
+  std::cout << "---------------------\n";
+
+  Tensor d({{{0, 1, 2}, {3, 4, 5}}, {{6, 7, 8}, {9, 10, 11}}});  // tensor
+  d.print();
+
+  std::cout << "---------------------\n";
 
   return 0;
 }
