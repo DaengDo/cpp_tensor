@@ -1,38 +1,56 @@
 #include <initializer_list>
 #include <iostream>
+#include <optional>
+#include <stdexcept>
 #include <vector>
 
-namespace detail {
-template <size_t Dim = 0>
 class Tensor {
  private:
   std::vector<double> buffer;
-
-  // Helper function to print the tensor
-  void printImpl(const std::vector<double>& vec) const {
-    std::cout << "[ ";
-    for (const auto& val : vec) {
-      std::cout << val << " ";
-    }
-    std::cout << "]" << std::endl;
-  }
+  std::vector<int> shape;
 
  public:
   // scalar
-  Tensor(const double& scalar) {
-    buffer.push_back(static_cast<double>(scalar));
-  }
+  Tensor(const double& scalar) : buffer{scalar}, shape{} {}
 
   // tensor
   Tensor(const std::initializer_list<Tensor>& list) {
+    if (list.size() == 0) {
+      std::runtime_error("Void tensor is not allowed.");
+    }
+
+    // deep copy the shape of the first element
+    auto it = list.begin();
+    shape = it->shape;
+
+    // check if the rest of the elements are the same
+    for (; it != list.end(); it++) {
+      if (it->shape != shape) {
+        std::runtime_error("inconsistent tensor is not allowed.");
+      }
+    }
+
+    // insert the current dimension size
+    shape.insert(shape.begin(), list.size());
+
+    // following code handles buffer
     for (const auto& element : list) {
       buffer.insert(buffer.end(), element.buffer.begin(), element.buffer.end());
     }
   }
 
-  // Print the tensor
-  void print() const { printImpl(buffer); }
-};
-}  // namespace detail
+  // for debug
+  void print() const {
+    std::cout << "buffer: [ ";
+    for (const auto& val : buffer) {
+      std::cout << val << " ";
+    }
+    std::cout << "]\n";
 
-using Tensor = detail::Tensor<>;
+    std::cout << "shape: [ ";
+    for (const auto& val : shape) {
+      std::cout << val << " ";
+    }
+    std::cout << "]" << std::endl;
+  }
+};
