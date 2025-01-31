@@ -39,6 +39,28 @@ class Tensor {
     }
   }
 
+  // when shape and buffer offered
+  Tensor(const std::vector<int> input_shape, const std::vector<double> input_buffer) {
+    buffer = input_buffer;
+    shape = input_shape;
+  }
+
+  Tensor operator+(const Tensor& other) const {
+    if (other.shape != this->shape) {
+      // TODO: change to compile time error
+      std::runtime_error("Attempted addition between incompatible vector spaces.");
+    }
+
+    auto buffer_size = buffer.size();
+    std::vector<double> result;
+    result.reserve(buffer_size);
+    for (int i = 0; i < buffer_size; i++) {
+      result.push_back(other.buffer[i] + buffer[i]);
+    }
+
+    return Tensor(shape, result);
+  }
+
   // for debug
   void print() const {
     std::cout << "buffer: [ ";

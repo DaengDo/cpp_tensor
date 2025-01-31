@@ -19,9 +19,36 @@ int main() {
 
   std::cout << "-----------tensor----------\n";
 
-  Tensor d =
-      Tensor({{{0, 1, 2}, {3, 4, 5}}, {{6, 7, 8}, {9, 10, 11}}});  // 2x2x3
+  Tensor d = Tensor({{{0, 1, 2}, {3, 4, 5}}, {{6, 7, 8}, {9, 10, 11}}});  // 2x2x3
   d.print();
+
+  std::cout << "-----------scalar addition----------\n";
+
+  Tensor one = Tensor(1);
+  Tensor two = Tensor(2);
+  Tensor three = one + two;
+  three.print();
+
+  std::cout << "-----------vector addition----------\n";
+
+  Tensor vec1 = Tensor({1, 2, 3});
+  Tensor vec2 = Tensor({4, 5, 6});
+  Tensor vec3 = vec1 + vec2;
+  vec3.print();
+
+  std::cout << "-----------matrix addition----------\n";
+
+  Tensor mat1 = Tensor({{1, 2}, {3, 4}});
+  Tensor mat2 = Tensor({{5, 6}, {7, 8}});
+  Tensor mat3 = mat1 + mat2;
+  mat3.print();
+
+  std::cout << "-----------tensor addition----------\n";
+
+  Tensor ten1 = Tensor({{{0, 1, 2}, {3, 4, 5}}, {{6, 7, 8}, {9, 10, 11}}});
+  Tensor ten2 = Tensor({{{0, 1, 2}, {3, 4, 5}}, {{6, 7, 8}, {9, 10, 11}}});
+  Tensor ten3 = ten1 + ten2;
+  ten3.print();
 
   return 0;
 }
