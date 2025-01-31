@@ -55,7 +55,23 @@ class Tensor {
     std::vector<double> result;
     result.reserve(buffer_size);
     for (int i = 0; i < buffer_size; i++) {
-      result.push_back(other.buffer[i] + buffer[i]);
+      result.push_back(buffer[i] + other.buffer[i]);
+    }
+
+    return Tensor(shape, result);
+  }
+
+  Tensor operator-(const Tensor& other) const {
+    if (other.shape != this->shape) {
+      // TODO: change to compile time error
+      std::runtime_error("Attempted addition between incompatible vector spaces.");
+    }
+
+    auto buffer_size = buffer.size();
+    std::vector<double> result;
+    result.reserve(buffer_size);
+    for (int i = 0; i < buffer_size; i++) {
+      result.push_back(buffer[i] - other.buffer[i]);
     }
 
     return Tensor(shape, result);
