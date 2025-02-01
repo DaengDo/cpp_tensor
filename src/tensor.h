@@ -1,3 +1,5 @@
+#pragma once
+
 #include <initializer_list>
 #include <iostream>
 #include <optional>
@@ -13,10 +15,7 @@ class Tensor {
     return t1.shape.size() == t2.shape.size();
   }
 
-  bool is_scalar() const { return shape.size() == 0 && buffer.size() == 1; }
-  bool is_matrix() const { return shape.size() == 2; }
-
- public:
+  public:
   // scalar
   Tensor(const double& scalar) : buffer{scalar}, shape{} {}
 
@@ -185,4 +184,10 @@ class Tensor {
     }
     std::cout << "]" << std::endl;
   }
+
+  std::vector<int> get_shape() { return shape; }
+  std::vector<double> get_buffer() { return buffer; }
+
+  bool is_scalar() const { return shape.size() == 0 && buffer.size() == 1; }
+  bool is_matrix() const { return shape.size() == 2; }
 };

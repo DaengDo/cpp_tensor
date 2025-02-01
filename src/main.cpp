@@ -1,5 +1,6 @@
 #include <iostream>
 
+#include "matrix.h"
 #include "tensor.h"
 
 int main() {
@@ -22,6 +23,17 @@ int main() {
   c.print();
   (c + Tensor({{1, 2}, {3, 4}})).print();
   (c - Tensor({{1, 2}, {3, 4}})).print();
+
+  std::cout << "@@@@@@@@@@@@@@@@\n";
+
+  matrix::swap_rows(c, 0, 1).print();
+
+  matrix::swap_rows(Tensor({{1, 2, 3}, {4, 5, 6}, {7, 8, 9}}), 1, 2).print();
+
+  matrix::scale_row(c, 0, 3).print();
+  matrix::add_muliple_row(c, 0, 1, -3).print();
+
+  std::cout << "@@@@@@@@@@@@@@@@\n";
 
   std::cout << "-----------tensor----------\n";
 
