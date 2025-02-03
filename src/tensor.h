@@ -9,20 +9,20 @@
 class Tensor {
  private:
   std::vector<double> buffer;
-  std::vector<int> shape;
+  std::vector<size_t> shape;
 
   static bool is_same_dimension(const Tensor& t1, const Tensor& t2) {
     return t1.shape.size() == t2.shape.size();
   }
 
-  public:
+ public:
   // scalar
   Tensor(const double& scalar) : buffer{scalar}, shape{} {}
 
   // tensor
   Tensor(const std::initializer_list<Tensor>& list) {
     if (list.size() == 0) {
-      std::runtime_error("Void tensor is not allowed.");
+      throw std::runtime_error("Void tensor is not allowed.");
     }
 
     // deep copy the shape of the first element
@@ -32,7 +32,7 @@ class Tensor {
     // check if the rest of the elements are the same
     for (; it != list.end(); it++) {
       if (it->shape != shape) {
-        std::runtime_error("inconsistent tensor is not allowed.");
+        throw std::runtime_error("inconsistent tensor is not allowed.");
       }
     }
 
@@ -46,7 +46,7 @@ class Tensor {
   }
 
   // when shape and buffer offered
-  Tensor(const std::vector<int> input_shape, const std::vector<double> input_buffer) {
+  Tensor(const std::vector<size_t> input_shape, const std::vector<double> input_buffer) {
     buffer = input_buffer;
     shape = input_shape;
   }
@@ -54,7 +54,7 @@ class Tensor {
   Tensor operator+(const Tensor& other) const {
     if (!is_same_dimension(*this, other)) {
       // TODO: change to compile time error
-      std::runtime_error("Attempted addition between incompatible vector spaces.");
+      throw std::runtime_error("Attempted addition between incompatible vector spaces.");
     }
 
     auto buffer_size = buffer.size();
@@ -70,7 +70,7 @@ class Tensor {
   Tensor operator-(const Tensor& other) const {
     if (!is_same_dimension(*this, other)) {
       // TODO: change to compile time error
-      std::runtime_error("Attempted addition between incompatible vector spaces.");
+      throw std::runtime_error("Attempted addition between incompatible vector spaces.");
     }
 
     auto buffer_size = buffer.size();
@@ -112,7 +112,7 @@ class Tensor {
 
     // TODO: implement broadcasting multiplication
     if (!is_same_dimension(*this, other)) {
-      std::runtime_error("broadcasting multiplication is not supported");
+      throw std::runtime_error("broadcasting multiplication is not supported");
     }
 
     // handle element-wise multiplication
@@ -155,7 +155,7 @@ class Tensor {
 
     // TODO: implement broadcasting division
     if (!is_same_dimension(*this, other)) {
-      std::runtime_error("broadcasting multiplication is not supported");
+      throw std::runtime_error("broadcasting multiplication is not supported");
     }
 
     // handle element-wise division
@@ -185,7 +185,7 @@ class Tensor {
     std::cout << "]" << std::endl;
   }
 
-  std::vector<int> get_shape() { return shape; }
+  std::vector<size_t> get_shape() { return shape; }
   std::vector<double> get_buffer() { return buffer; }
 
   bool is_scalar() const { return shape.size() == 0 && buffer.size() == 1; }
