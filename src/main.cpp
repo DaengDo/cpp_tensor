@@ -33,6 +33,15 @@ int main() {
   matrix::scale_row(c, 0, 3).print();
   matrix::add_muliple_row(c, 0, 1, -3).print();
 
+  std::cout << "find zero rows\n";
+  for (auto zero_row_idx : matrix::find_zero_rows(c)) {
+    std::cout << zero_row_idx << std::endl;
+  }
+
+  for (auto zero_row_idx : matrix::find_zero_rows(Tensor({{0, 0}, {1, 2}, {0, 0}, {3, 4}}))) {
+    std::cout << zero_row_idx << std::endl;
+  }
+
   std::cout << "@@@@@@@@@@@@@@@@\n";
 
   std::cout << "-----------tensor----------\n";
@@ -41,6 +50,12 @@ int main() {
   d.print();
   (d + Tensor({{{12, 13, 14}, {15, 16, 17}}, {{18, 19, 20}, {21, 22, 23}}})).print();
   (d - Tensor({{{12, 13, 14}, {15, 16, 17}}, {{18, 19, 20}, {21, 22, 23}}})).print();
+
+  std::cout << "###########is_reduced_row_echoelon_form###########\n";
+
+  std::cout << matrix::is_reduced_row_echoelon_form(Tensor({{0, 1, 0}, {0, 0, 1}})) << "\n";
+
+  std::cout << "###########is_reduced_row_echoelon_form###########\n";
 
   return 0;
 }
