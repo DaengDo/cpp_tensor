@@ -149,8 +149,49 @@ bool is_reduced_row_echoelon_form(Tensor matrix) {
   return true;
 }
 
-std::vector<double> solve() {
-  // TODO: 가우스 조던 소거법으로 연립일차방정식 풀기
+// TODO: solve equations using Gauss-Jordan elimination
+std::vector<double> solve(Tensor matrix) {
+  // 행 교환이 필요한 행렬은 뭔가 추가적으로 처리해줘야 하나?
+
+  // 처음 leading 1을 찾는 함수 필요 -> 각 행에 non-zero 원소가 있는지 확인 필요
+
+  assert_matrix(matrix, "Gauss-Jordan elimination can only compatible with matrix");
+
+  auto buffer = matrix.get_buffer();
+  auto shape = matrix.get_shape();
+
+  auto row_size = shape[0];
+  auto col_size = shape[1];
+
+  // 미지수 갯수와 일차식 갯수가 같은지 확인
+  if (row_size != (col_size - 1)) return std::vector<double>{};
+
+  // TODO: make RREF using elementary row operations
+  for (size_t i = 0; i < col_size - 1; i++) {
+    for (size_t j = 0; j < row_size - 1; j++) {
+      auto element = buffer[i + j * col_size];
+      if (i == j && element == 0) {
+        // 기본 행 연산으로 가장 큰 행 찾아서 변환하기
+        size_t biggest_row = j;
+        double biggest_leading = element;
+        for (int k = 0; k < row_size - 1; k++) {
+          double leading = buffer[i + k * col_size];
+          if (leading > biggest_leading) {
+            biggest_leading = leading;
+            biggest_row = k;
+          }
+        }
+      }
+      // 모든 열 선회
+    }
+  }
+
+  // TODO: rank가 맞는지 확인
+
+  is_reduced_row_echoelon_form(matrix);
+
+  // 각 행의 가장 마지막 요소(상수 행)를 std::vector<double>로 반환하기
+
   return std::vector<double>{};
 }
 
