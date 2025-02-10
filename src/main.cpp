@@ -1,7 +1,7 @@
 #include <iostream>
 
-#include "matrix.h"
-#include "tensor.h"
+#include "matrix/matrix.h"
+#include "tensor/tensor.h"
 
 int main() {
   std::cout << "-----------scalar----------\n";

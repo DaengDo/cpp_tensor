@@ -1,9 +1,7 @@
-#pragma once
+#include "matrix.h"
 
 #include <stdexcept>
 #include <vector>
-
-#include "tensor.h"
 
 namespace matrix {
 // TODO: change to compile time error
