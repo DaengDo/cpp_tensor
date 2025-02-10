@@ -31,7 +31,7 @@ int main() {
   matrix::swap_rows(Tensor({{1, 2, 3}, {4, 5, 6}, {7, 8, 9}}), 1, 2).print();
 
   matrix::scale_row(c, 0, 3).print();
-  matrix::add_muliple_row(c, 0, 1, -3).print();
+  matrix::add_multiple_row(c, 0, 1, -3).print();
 
   std::cout << "find zero rows\n";
   for (auto zero_row_idx : matrix::find_zero_rows(c)) {
@@ -55,7 +55,16 @@ int main() {
 
   std::cout << matrix::is_reduced_row_echoelon_form(Tensor({{0, 1, 0}, {0, 0, 1}})) << "\n";
 
-  std::cout << "###########is_reduced_row_echoelon_form###########\n";
+  std::cout << "gauss-jordan elimination test\n";
+
+  Tensor e = Tensor({{2, 1, -1, 8}, {0, 1, 1, 2}, {0, 0, -1, 1}});
+
+  auto result = matrix::solve(e);
+
+  for (auto element : result) {
+    std::cout << element << " ";
+  }
+  std::cout << "\n";
 
   return 0;
 }

@@ -62,7 +62,7 @@ Tensor scale_row(Tensor matrix, size_t row_i, double scalar_c) {
 }
 
 // R { i, j } * c
-Tensor add_muliple_row(Tensor matrix, size_t row_i, size_t row_j, double scalar_c) {
+Tensor add_multiple_row(Tensor matrix, size_t row_i, size_t row_j, double scalar_c) {
   assert_matrix(matrix, "elementary row operation(add multiple row) can only be applied to matrix");
 
   auto buffer = matrix.get_buffer();
@@ -127,7 +127,7 @@ bool is_reduced_row_echoelon_form(Tensor matrix) {
 
   for (int row = 0; row < row_size; row++) {
     bool has_leading_entry = false;
-    for (int col = 0; col < col_size; col++) {
+    for (int col = 0; col < col_size - 1; col++) {
       auto element = buffer[col + row * col_size];
 
       if (element == 0) continue;
@@ -149,9 +149,93 @@ bool is_reduced_row_echoelon_form(Tensor matrix) {
   return true;
 }
 
-std::vector<double> solve() {
-  // TODO: 가우스 조던 소거법으로 연립일차방정식 풀기
-  return std::vector<double>{};
+// TODO: solve equations using Gauss-Jordan elimination
+std::vector<double> solve(Tensor matrix) {
+  // 행 교환이 필요한 행렬은 뭔가 추가적으로 처리해줘야 하나?
+
+  // 처음 leading 1을 찾는 함수 필요 -> 각 행에 non-zero 원소가 있는지 확인 필요
+
+  assert_matrix(matrix, "Gauss-Jordan elimination can only compatible with matrix");
+
+  auto buffer = matrix.get_buffer();
+  auto shape = matrix.get_shape();
+
+  auto row_size = shape[0];
+  auto col_size = shape[1];
+
+  // TODO: rank와 관련 없는 행(ex: 무의미한 영행) 지우기
+
+  // 미지수 갯수와 일차식 갯수가 같은지 확인
+  if (row_size != (col_size - 1)) return std::vector<double>{};
+
+  // 1. make REF(row echolon form)
+  for (size_t row = 0; row < row_size; row++) {
+    for (size_t col = 0; col < col_size - 1; col++) {
+      auto element = buffer[col + row * col_size];
+
+      if (col < row) {
+        // 1. 선도원소 앞 요소인 경우
+        if (element == 0) continue;
+
+        size_t other_row = row;
+        // 0으로 만들기 위해 이전 행의 선도원소로 R_{col, row}(c) 하기
+        matrix = add_multiple_row(matrix, row, col, -1 / element);
+        buffer = matrix.get_buffer();
+      } else if (col > row) {
+        // 2. 선도원소보다 뒤 요소인 경우
+        continue;
+      } else {
+        // 3. 선도원소인 경우
+        if (element == 0) {
+          // 기본 행 연산으로 가장 큰 행 찾아서 변환하기
+          size_t biggest_row = row;
+          double biggest_leading = element;
+
+          // 현재 행의 leading과 다른 모든 leading 비교
+          for (int k = 0; k < row_size - 1; k++) {
+            double leading = buffer[col + k * col_size];
+
+            if (leading > biggest_leading) {
+              biggest_leading = leading;
+              biggest_row = k;
+            }
+          }
+          matrix = swap_rows(matrix, row, biggest_row);
+          buffer = matrix.get_buffer();
+          element = buffer[col + row * col_size];
+        }
+
+        // 선도원소를 1로 만들어주기
+        matrix = scale_row(matrix, row, 1 / element);
+        buffer = matrix.get_buffer();
+      }
+    }
+  }
+
+  std::vector<double> result;
+  result.reserve(row_size);
+
+  // 2. make RREF
+  for (size_t row = 0; row < row_size; row++) {
+    for (size_t col = 0; col < col_size; col++) {
+      // 이미 REF 이므로, 선도 원소보다 뒤의 요소만 다뤄, RREF로 만들기
+      bool is_prev_leading = col < row;
+      bool is_leading = col == row;
+      if (is_prev_leading || is_leading) continue;
+
+      bool is_const_element = col == row_size;  // 상수열은 해로 저장하기
+      if (is_const_element) {
+        result.push_back(buffer[col + row * col_size]);
+      } else {
+        // 아래쪽의 선도원소 찾아서 R_{i, j}(c) 해주기
+        auto element = buffer[col + row * col_size];
+        matrix = add_multiple_row(matrix, col, row, -element);
+        buffer = matrix.get_buffer();
+      }
+    }
+  }
+
+  return result;
 }
 
 }  // namespace matrix
