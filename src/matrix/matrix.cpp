@@ -146,10 +146,6 @@ bool is_reduced_row_echoelon_form(Tensor matrix) {
 }
 
 std::vector<double> solve(Tensor matrix) {
-  // 행 교환이 필요한 행렬은 뭔가 추가적으로 처리해줘야 하나?
-
-  // 처음 leading 1을 찾는 함수 필요 -> 각 행에 non-zero 원소가 있는지 확인 필요
-
   assert_matrix(matrix, "Gauss-Jordan elimination can only compatible with matrix");
 
   auto buffer = matrix.get_buffer();
@@ -169,7 +165,7 @@ std::vector<double> solve(Tensor matrix) {
       auto element = buffer[col + row * col_size];
 
       if (col < row) {
-        // 1. 선도원소 앞 요소인 경우
+        // 1) 선도원소 앞 요소인 경우
         if (element == 0) continue;
 
         size_t other_row = row;
@@ -177,10 +173,10 @@ std::vector<double> solve(Tensor matrix) {
         matrix = add_multiple_row(matrix, row, col, -1 / element);
         buffer = matrix.get_buffer();
       } else if (col > row) {
-        // 2. 선도원소보다 뒤 요소인 경우
+        // 2) 선도원소보다 뒤 요소인 경우
         continue;
       } else {
-        // 3. 선도원소인 경우
+        // 3) 선도원소인 경우
         if (element == 0) {
           // 기본 행 연산으로 가장 큰 행 찾아서 변환하기
           size_t biggest_row = row;
