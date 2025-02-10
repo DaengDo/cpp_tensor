@@ -10,9 +10,7 @@ void assert_matrix(Tensor matrix, const char* err_msg) {
   throw std::runtime_error(err_msg);
 }
 
-// elementary row operation
-
-// R { i, j }
+// R_{i, j}
 Tensor swap_rows(Tensor matrix, size_t row_i, size_t row_j) {
   assert_matrix(matrix, "elementary row operation(swap row) can only be applied to matrix");
 
@@ -38,7 +36,7 @@ Tensor swap_rows(Tensor matrix, size_t row_i, size_t row_j) {
   return Tensor(shape, buffer);
 }
 
-// R { i } * c
+// R_i(c)
 Tensor scale_row(Tensor matrix, size_t row_i, double scalar_c) {
   assert_matrix(matrix, "elementary row operation(scale row) can only be applied to matrix");
 
@@ -59,7 +57,7 @@ Tensor scale_row(Tensor matrix, size_t row_i, double scalar_c) {
   return Tensor(shape, buffer);
 }
 
-// R { i, j } * c
+// R_{i, j}(c)
 Tensor add_multiple_row(Tensor matrix, size_t row_i, size_t row_j, double scalar_c) {
   assert_matrix(matrix, "elementary row operation(add multiple row) can only be applied to matrix");
 
@@ -147,7 +145,6 @@ bool is_reduced_row_echoelon_form(Tensor matrix) {
   return true;
 }
 
-// TODO: solve equations using Gauss-Jordan elimination
 std::vector<double> solve(Tensor matrix) {
   // 행 교환이 필요한 행렬은 뭔가 추가적으로 처리해줘야 하나?
 

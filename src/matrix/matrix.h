@@ -9,16 +9,16 @@ namespace matrix {
 void assert_matrix(Tensor matrix, const char* err_msg);
 
 // elementary row operation
-// R { i, j }
-Tensor swap_rows(Tensor matrix, size_t row_i, size_t row_j);
-// R { i } * c
-Tensor scale_row(Tensor matrix, size_t row_i, double scalar_c);
-// R { i, j } * c
-Tensor add_multiple_row(Tensor matrix, size_t row_i, size_t row_j, double scalar_c);
+// R_{i, j}
+auto swap_rows(Tensor matrix, size_t row_i, size_t row_j) -> Tensor;
+// R_i(c)
+auto scale_row(Tensor matrix, size_t row_i, double scalar_c) -> Tensor;
+// R_{i, j}(c)
+auto add_multiple_row(Tensor matrix, size_t row_i, size_t row_j, double scalar_c) -> Tensor;
 
-std::vector<size_t> find_zero_rows(Tensor matrix);
-bool is_reduced_row_echoelon_form(Tensor matrix);
+auto find_zero_rows(Tensor matrix) -> std::vector<size_t>;
+auto is_reduced_row_echoelon_form(Tensor matrix) -> bool;
 
 // Gauss-Jordan elimination
-std::vector<double> solve(Tensor matrix);
+auto solve(Tensor matrix) -> std::vector<double>;
 }  // namespace matrix
