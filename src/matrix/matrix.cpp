@@ -1,5 +1,6 @@
 #include "matrix.h"
 
+#include <cmath>
 #include <stdexcept>
 #include <vector>
 
@@ -168,9 +169,8 @@ std::vector<double> solve(Tensor matrix) {
         // 1) 선도원소 앞 요소인 경우
         if (element == 0) continue;
 
-        size_t other_row = row;
-        // 0으로 만들기 위해 이전 행의 선도원소로 R_{col, row}(c) 하기
-        matrix = add_multiple_row(matrix, row, col, -1 / element);
+        // 0으로 만들기 위해 이전 행의 선도원소로 R_{i, j}(c) 하기
+        matrix = add_multiple_row(matrix, col, row, -element);
         buffer = matrix.get_buffer();
       } else if (col > row) {
         // 2) 선도원소보다 뒤 요소인 경우
@@ -186,7 +186,7 @@ std::vector<double> solve(Tensor matrix) {
           for (int k = 0; k < row_size - 1; k++) {
             double leading = buffer[col + k * col_size];
 
-            if (leading > biggest_leading) {
+            if (leading > std::abs(biggest_leading)) {
               biggest_leading = leading;
               biggest_row = k;
             }
