@@ -283,4 +283,33 @@ Tensor multiplication(Tensor left, Tensor right) {
     return Tensor(std::vector<size_t>{m, n}, buffer);
   }
 }
+
+Tensor transpose(Tensor matrix) {
+  assert_matrix(matrix, "invalid transpose");
+
+  auto origin_shape = matrix.get_shape();
+  auto origin_buffer = matrix.get_buffer();
+
+  size_t row;
+  size_t col;
+
+  // TODO: Tensor 클래스가 벡터일 때 1 x n 형태를 자동 지원하도록 개선하기
+  if (origin_shape.size() == 1) {
+    row = 1;
+    col = origin_shape[0];
+  } else {
+    row = origin_shape[0];
+    col = origin_shape[1];
+  }
+
+  std::vector<double> buffer;
+
+  for (int i = 0; i < col; i++) {
+    for (int j = 0; j < row; j++) {
+      buffer.push_back(origin_buffer[i + j * col]);
+    }
+  }
+
+  return Tensor(std::vector<size_t>{col, row}, buffer);
+}
 }  // namespace matrix

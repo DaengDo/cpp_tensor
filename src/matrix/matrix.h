@@ -23,4 +23,6 @@ auto is_reduced_row_echoelon_form(Tensor matrix) -> bool;
 auto solve(Tensor matrix) -> std::vector<double>;
 
 auto multiplication(Tensor left, Tensor right) -> Tensor;
+
+auto transpose(Tensor matrix) -> Tensor;
 }  // namespace matrix
