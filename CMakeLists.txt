@@ -8,3 +8,4 @@ set(MATRIX_CPP src/matrix/matrix.cpp)
 
 add_executable(tensor-calculator src/main.cpp ${MATRIX_CPP})
 add_executable(systems_of_linear_equations examples/systems_of_linear_equations.cpp ${MATRIX_CPP})
+add_executable(matrix_multiplication examples/matrix_multiplication.cpp ${MATRIX_CPP})
