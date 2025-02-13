@@ -250,10 +250,10 @@ Tensor multiplication(Tensor left, Tensor right) {
   }
 
   if (right_shape.size() == 1) {
-    i = 1;
+    if (i != 1) std::runtime_error("The inner dimensions of the matrices must match");
     n = right_shape[0];
   } else {
-    i = right_shape[0];
+    if (i != right_shape[0]) std::runtime_error("The inner dimensions of the matrices must match");
     n = right_shape[1];
   }
 
