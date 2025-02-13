@@ -189,5 +189,6 @@ class Tensor {
   std::vector<double> get_buffer() { return buffer; }
 
   bool is_scalar() const { return shape.size() == 0 && buffer.size() == 1; }
-  bool is_matrix() const { return shape.size() == 2; }
+  // TODO: Tensor 클래스가 벡터일 때 1 x n 형태를 자동 지원하도록 개선하기
+  bool is_matrix() const { return shape.size() == 2 || shape.size() == 1; }
 };

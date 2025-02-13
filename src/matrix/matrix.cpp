@@ -229,4 +229,58 @@ std::vector<double> solve(Tensor matrix) {
   return result;
 }
 
+Tensor multiplication(Tensor left, Tensor right) {
+  assert_matrix(left, "the left operand of the matrix multiplication is not a matrix.");
+  assert_matrix(right, "the right operand of the matrix multiplication is not a matrix.");
+
+  auto left_buffer = left.get_buffer();
+  auto right_buffer = right.get_buffer();
+
+  auto left_shape = left.get_shape();    // m x i
+  auto right_shape = right.get_shape();  // i x n
+
+  size_t m, i, n;  // m x n 형태의 행렬을 반환하기 위한 변수 선언
+
+  if (left_shape.size() == 1) {
+    m = 1;
+    i = left_shape[0];
+  } else {
+    m = left_shape[0];
+    i = left_shape[1];
+  }
+
+  if (right_shape.size() == 1) {
+    i = 1;
+    n = right_shape[0];
+  } else {
+    i = right_shape[0];
+    n = right_shape[1];
+  }
+
+  std::vector<double> buffer;
+  buffer.reserve(m * n);
+
+  // c_{m_n} = \sum_{k=1}^(n)  (a_{m_k}) * (b_{k_n})
+  for (size_t row = 0; row < m; row++) {
+    for (size_t col = 0; col < n; col++) {
+      size_t result = 0;
+      double sum = 0;
+
+      for (size_t k = 0; k < i; k++) {
+        auto left_element = left_buffer[i * row + k];
+        auto right_element = right_buffer[k * n + col];
+        sum += left_element * right_element;
+      }
+
+      buffer.push_back(sum);
+    }
+  }
+
+  // TODO: Tensor 클래스가 벡터일 때 1 x n 형태를 자동 지원하도록 개선하기
+  if (m == 1 && m == n) {
+    return Tensor(std::vector<size_t>{1}, buffer);
+  } else {
+    return Tensor(std::vector<size_t>{m, n}, buffer);
+  }
+}
 }  // namespace matrix

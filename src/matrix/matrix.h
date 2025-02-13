@@ -21,4 +21,6 @@ auto is_reduced_row_echoelon_form(Tensor matrix) -> bool;
 
 // Gauss-Jordan elimination
 auto solve(Tensor matrix) -> std::vector<double>;
+
+auto multiplication(Tensor left, Tensor right) -> Tensor;
 }  // namespace matrix
