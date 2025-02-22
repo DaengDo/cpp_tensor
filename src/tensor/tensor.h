@@ -170,6 +170,10 @@ class Tensor {
     return Tensor(shape, result);
   }
 
+  bool operator==(const Tensor other) const {
+    return other.get_shape() == this->get_shape() && other.get_buffer() == this->get_buffer();
+  }
+
   // for debug
   void print() const {
     std::cout << "buffer: [ ";
@@ -185,8 +189,8 @@ class Tensor {
     std::cout << "]" << std::endl;
   }
 
-  std::vector<size_t> get_shape() { return shape; }
-  std::vector<double> get_buffer() { return buffer; }
+  std::vector<size_t> get_shape() const { return shape; }
+  std::vector<double> get_buffer() const { return buffer; }
 
   bool is_scalar() const { return shape.size() == 0 && buffer.size() == 1; }
   // TODO: Tensor 클래스가 벡터일 때 1 x n 형태를 자동 지원하도록 개선하기

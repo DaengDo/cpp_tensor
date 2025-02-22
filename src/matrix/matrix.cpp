@@ -312,4 +312,6 @@ Tensor transpose(Tensor matrix) {
 
   return Tensor(std::vector<size_t>{col, row}, buffer);
 }
+
+bool is_symmetric(Tensor a, Tensor b) { return solve(a) == solve(b); };
 }  // namespace matrix

@@ -25,4 +25,7 @@ auto solve(Tensor matrix) -> std::vector<double>;
 auto multiplication(Tensor left, Tensor right) -> Tensor;
 
 auto transpose(Tensor matrix) -> Tensor;
+
+// 행렬 A에 대해 A^T == A 를 만족하는지 여부
+auto is_symmetric(Tensor a, Tensor b) -> bool;
 }  // namespace matrix
